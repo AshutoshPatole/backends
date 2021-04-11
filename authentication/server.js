@@ -1,7 +1,12 @@
 import express from 'express'
-
+import loginRoute from './routes'
 const app = express()
 
-app.listen(3000, () => {
-    console.log("Listening")
+require('dotenv').config()
+
+app.use('/auth', loginRoute)
+const PORT = process.env.PORT || 8080
+
+app.listen(PORT, () => {
+    console.log(`[INFO] Live at ${PORT}`)
 })

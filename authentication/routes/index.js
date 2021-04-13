@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import login from './controller'
+import register from './auth'
 const loginRoute = Router()
 
 
-loginRoute.post('/login', login)
+loginRoute.post('/login', register)
 
 
 export default loginRoute

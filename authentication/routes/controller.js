@@ -1,25 +1,34 @@
-import User from '../models/user'
-import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
-const login = async (req, res) => {
-    const existingUser = await User.findOne({ email: req.body.email })
-    if (existingUser) return res.send("Email already exists")
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        ip: req.connection.remoteAddress,
-        source: req.headers['user-agent']
-    })
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt)
-    try {
-        await user.save()
-        return res.send(user)
+const generateToken = (_id, tokenType = 'A') => {
+    let TOKEN_TYPE = tokenType == 'R' ? 'REFRESH_TOKEN' : 'ACCESS_TOKEN'
+
+    let ACCESS_TOKEN_EXPIRY = '1h'
+
+    let payload = {
+        id: _id,
+        type: TOKEN_TYPE,
     }
-    catch (e) {
-        return res.send("Could not add users")
+    if (tokenType == 'R') {
+        let signedJWT = jwt.sign(payload, process.env.AUTHORIZATION_SECRET_KEY)
+        return signedJWT
     }
+    let signedJWT = jwt.sign(payload, process.env.AUTHORIZATION_SECRET_KEY, { expiresIn: ACCESS_TOKEN_EXPIRY })
+    return signedJWT
 }
 
-export default login
+const generateAccessToken = (object_id) => {
+    let tokenType = 'A'
+    return generateToken(object_id, tokenType)
+}
+
+
+const generateRefreshToken = (object_id) => {
+    let tokenType = 'R'
+    return generateToken(object_id, tokenType)
+}
+
+export {
+    generateAccessToken,
+    generateRefreshToken
+}

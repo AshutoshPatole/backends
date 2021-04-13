@@ -18,6 +18,10 @@ const UserSchema = new mongoose.Schema({
     ip: {
         type: String
     },
+    password: {
+        type: String,
+        required: true
+    }
 }, { timestamps: true })
 
 const User = mongoose.model("Users", UserSchema)

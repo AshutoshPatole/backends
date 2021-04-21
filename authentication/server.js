@@ -28,13 +28,11 @@ app.use(passport.session())
 connectDb()
 
 app.get('/', (req, res) => {
-    console.log(req.user)
-
     if (req.user == null) return res.send("login again")
     return res.send(req.user)
 })
 
-app.post('/temp', validateToken, (req, res) => {
+app.post('/temp', validateToken, (_req, res) => {
     res.send("Hello")
 })
 

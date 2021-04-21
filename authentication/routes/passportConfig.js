@@ -32,7 +32,7 @@ const initialize = () => {
 
     passport.deserializeUser((id, done) => {
         User.findById(id, (err, user) => {
-            done(err, user);
+            done(err, user._id);
         });
     });
 };

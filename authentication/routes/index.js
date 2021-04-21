@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { register, login, refreshToken } from './auth'
-import validateToken from '../middleware/authorization'
 const loginRoute = Router()
 
 

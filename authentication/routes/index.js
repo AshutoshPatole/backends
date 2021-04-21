@@ -1,14 +1,11 @@
 import { Router } from 'express'
-import { register, login, passportLogin } from './auth'
+import { register, login, refreshToken } from './auth'
 import validateToken from '../middleware/authorization'
 const loginRoute = Router()
 
 
 loginRoute.post('/register', register)
-loginRoute.post('/login', passportLogin)
-loginRoute.get('/', validateToken, (_req, res) => {
-    res.send("Temp")
-})
-
+loginRoute.post('/login', login)
+loginRoute.get('/token', refreshToken)
 
 export default loginRoute

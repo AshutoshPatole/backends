@@ -110,7 +110,6 @@ const refreshToken = async (req, res) => {
                     }
                 }
             )
-
         })
     })
 }

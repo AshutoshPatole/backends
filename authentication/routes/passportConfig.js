@@ -1,17 +1,17 @@
-import passport from 'passport';
-const LocalStatergy = require('passport-local').Strategy;
-import User from '../models/user';
-import bcrypt from 'bcryptjs';
-import SERVER from '../constants/message';
+import passport from 'passport'
+import Strategy from 'passport-local'
+import User from '../models/user'
+import bcrypt from 'bcryptjs'
+import SERVER from '../constants/message'
 
 const valueField = {
     // by default passport uses [username] in `usernameField` so we override it with [email]
     usernameField: 'email',
 };
 
-const callbackValue = async (username, password, done) => {
+const validateUser = async (email, password, done) => {
     try {
-        const user = await User.findOne({ email: username });
+        const user = await User.findOne({ email: email });
         if (!user)
             return done(null, false, { message: SERVER.INVALID_CREDENTIALS });
         const validatePassword = await bcrypt.compare(password, user.password);
@@ -24,7 +24,7 @@ const callbackValue = async (username, password, done) => {
 };
 
 const initialize = () => {
-    passport.use(new LocalStatergy(valueField, callbackValue));
+    passport.use(new Strategy(valueField, validateUser));
 
     passport.serializeUser((user, done) => {
         done(null, user.id);
@@ -37,4 +37,4 @@ const initialize = () => {
     });
 };
 
-module.exports = initialize;
+export default initialize;
